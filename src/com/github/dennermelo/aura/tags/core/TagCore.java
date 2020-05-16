@@ -42,7 +42,7 @@ public class TagCore {
 		return econ;
 	}
 
-	private boolean setupEconomy(Plugin plugin) {
+	private boolean setupEconomy() {
 		if (Bukkit.getPluginManager().getPlugin("Vault") == null) {
 			return false;
 		}
@@ -72,7 +72,7 @@ public class TagCore {
 
 	private void loadParameters() {
 		hookPlayerPoints();
-		setupEconomy(plugin);
+		setupEconomy();
 		tagManager = new TagManager();
 
 		USE_TITLE = getConfig().getBoolean("Title.ativar");
