@@ -11,7 +11,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import com.github.dennermelo.aura.tags.core.TagCore;
 import com.github.dennermelo.aura.tags.objects.Tag;
 import com.github.dennermelo.aura.tags.utils.Scroller;
-import com.github.dennermelo.aura.tags.utils.Scroller.PlayerRunnable;
 
 import ru.tehkode.permissions.PermissionUser;
 import ru.tehkode.permissions.bukkit.PermissionsEx;
