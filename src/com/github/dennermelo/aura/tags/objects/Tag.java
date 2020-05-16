@@ -51,11 +51,11 @@ public class Tag {
 		this.permissao = permissao;
 	}
 
-	public String getItem_nome() {
+	public String getItemNome() {
 		return item_nome;
 	}
 
-	public void setItem_nome(String item_nome) {
+	public void setItemNome(String item_nome) {
 		this.item_nome = item_nome;
 	}
 

@@ -36,7 +36,7 @@ public class TagsListener implements Listener {
 			}
 			for (Tag tag : TagCore.getTags()) {
 
-				if (e.getCurrentItem().getItemMeta().getDisplayName().equals(tag.getItem_nome())) {
+				if (e.getCurrentItem().getItemMeta().getDisplayName().equals(tag.getItemNome())) {
 
 					if (TagCore.getTagManger().getTag(player.getName()) == tag) {
 						e.setCancelled(true);
