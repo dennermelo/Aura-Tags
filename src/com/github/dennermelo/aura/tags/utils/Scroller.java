@@ -178,9 +178,8 @@ public class Scroller {
     public static class ScrollerBuilder {
         private List<ItemStack> items;
         private String name;
-        private int inventorySize;
         private List<Integer> slots;
-        private int backSlot, previousPage, nextPage;
+        private int backSlot, previousPage, nextPage, inventorySize;
         private PlayerRunnable backRunnable;
         private ChooseItemRunnable clickRunnable;
 
