@@ -1,6 +1,5 @@
 package com.github.dennermelo.aura.tags.utils;
 
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -21,223 +20,238 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import com.github.dennermelo.aura.tags.Main;
 
-
 public class Scroller {
 
-    static {
-        Bukkit.getPluginManager().registerEvents(new Listener() {
-            @EventHandler
-            public void onClick(InventoryClickEvent e) {
-                if (e.getInventory().getHolder() instanceof ScrollerHolder) {
-                    e.setCancelled(true);
-                    ScrollerHolder holder = (ScrollerHolder) e.getInventory().getHolder();
-                    if (e.getSlot() == holder.getScroller().previousPage) {
-                        if (holder.getScroller().hasPage(holder.getPage() - 1)) {
-                            holder.getScroller().open((Player) e.getWhoClicked(), holder.getPage() - 1);
-                        }
-                    } else if (e.getSlot() == holder.getScroller().nextPage) {
-                        if (holder.getScroller().hasPage(holder.getPage() + 1)) {
-                            holder.getScroller().open((Player) e.getWhoClicked(), holder.getPage() + 1);
-                        }
-                    } else if (e.getSlot() == holder.getScroller().backSlot) {
-                        e.getWhoClicked().closeInventory();
-                        holder.getScroller().backRunnable.run((Player) e.getWhoClicked());
-                    } else if (holder.getScroller().slots.contains(e.getSlot()) && holder.getScroller().onClickRunnable != null) {
-                        if (e.getCurrentItem() == null || e.getCurrentItem().getType() == Material.AIR) return;
-                        holder.getScroller().onClickRunnable.run((Player) e.getWhoClicked(), e.getCurrentItem());
-                    }
-                }
-            }
-        }, Main.getPlugin());
-    }
+	static {
+		Bukkit.getPluginManager().registerEvents(new Listener() {
+			@EventHandler
+			public void onClick(InventoryClickEvent e) {
+				if (e.getInventory().getHolder() instanceof ScrollerHolder) {
+					e.setCancelled(true);
+					ScrollerHolder holder = (ScrollerHolder) e.getInventory().getHolder();
+					if (e.getSlot() == holder.getScroller().previousPage) {
+						if (holder.getScroller().hasPage(holder.getPage() - 1)) {
+							holder.getScroller().open((Player) e.getWhoClicked(), holder.getPage() - 1);
+						}
+					} else if (e.getSlot() == holder.getScroller().nextPage) {
+						if (holder.getScroller().hasPage(holder.getPage() + 1)) {
+							holder.getScroller().open((Player) e.getWhoClicked(), holder.getPage() + 1);
+						}
+					} else if (e.getSlot() == holder.getScroller().backSlot) {
+						e.getWhoClicked().closeInventory();
+						holder.getScroller().backRunnable.run((Player) e.getWhoClicked());
+					} else if (holder.getScroller().slots.contains(e.getSlot())
+							&& holder.getScroller().onClickRunnable != null) {
+						if (e.getCurrentItem() == null || e.getCurrentItem().getType() == Material.AIR)
+							return;
+						holder.getScroller().onClickRunnable.run((Player) e.getWhoClicked(), e.getCurrentItem());
+					}
+				}
+			}
+		}, Main.getPlugin());
+	}
 
-    private List<ItemStack> items;
-    private HashMap<Integer, Inventory> pages;
-    private String name;
-    private int inventorySize;
-    private List<Integer> slots;
-    private int backSlot, previousPage, nextPage;
-    private PlayerRunnable backRunnable;
-    private ChooseItemRunnable onClickRunnable;
+	private List<ItemStack> items;
+	private HashMap<Integer, Inventory> pages;
+	private String name;
+	private int inventorySize;
+	private List<Integer> slots;
+	private int backSlot;
+	private int previousPage;
+	private int nextPage;
 
-    public Scroller(ScrollerBuilder builder) {
-        this.items = builder.items;
-        this.pages = new HashMap<>();
-        this.name = builder.name;
-        this.inventorySize = builder.inventorySize;
-        this.slots = builder.slots;
-        this.backSlot = builder.backSlot;
-        this.backRunnable = builder.backRunnable;
-        this.previousPage = builder.previousPage;
-        this.nextPage = builder.nextPage;
-        this.onClickRunnable = builder.clickRunnable;
-        createInventories();
-    }
+	private PlayerRunnable backRunnable;
+	private ChooseItemRunnable onClickRunnable;
 
-    private void createInventories() {
-        List<List<ItemStack>> lists = getPages(items, slots.size());
-        int page = 1;
-        for (List<ItemStack> list : lists) {
-            Inventory inventory = Bukkit.createInventory(new ScrollerHolder(this, page), inventorySize, name);
-            int slot = 0;
-            for (ItemStack it : list) {
-                inventory.setItem(slots.get(slot), it);
-                slot++;
-            }
-            if (page != 1) inventory.setItem(previousPage, getPageFlecha(page - 1)); // se for a primeira página, não tem pra onde voltar
-            inventory.setItem(nextPage, getPageFlecha(page + 1));
-            if (backRunnable != null) inventory.setItem(backSlot, getBackFlecha());
-            pages.put(page, inventory);
-            page++;
-        }
-        pages.get(pages.size()).setItem(nextPage, new ItemStack(Material.AIR)); // vai na última página e remove a flecha de ir pra frente
-    }
+	public Scroller(ScrollerBuilder builder) {
+		this.items = builder.items;
+		this.pages = new HashMap<>();
+		this.name = builder.name;
+		this.inventorySize = builder.inventorySize;
+		this.slots = builder.slots;
+		this.backSlot = builder.backSlot;
+		this.backRunnable = builder.backRunnable;
+		this.previousPage = builder.previousPage;
+		this.nextPage = builder.nextPage;
+		this.onClickRunnable = builder.clickRunnable;
+		createInventories();
+	}
 
-    private ItemStack getBackFlecha() {
-        ItemStack item = new ItemStack(Material.ARROW);
-        ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(ChatColor.GREEN + "Voltar");
-        item.setItemMeta(meta);
-        return item;
-    }
+	private void createInventories() {
+		List<List<ItemStack>> lists = getPages(items, slots.size());
+		int page = 1;
+		for (List<ItemStack> list : lists) {
+			Inventory inventory = Bukkit.createInventory(new ScrollerHolder(this, page), inventorySize, name);
+			int slot = 0;
+			for (ItemStack it : list) {
+				inventory.setItem(slots.get(slot), it);
+				slot++;
+			}
+			if (page != 1)
+				inventory.setItem(previousPage, getPageFlecha(page - 1)); // se for a primeira página, não tem pra onde
+																			// voltar
+			inventory.setItem(nextPage, getPageFlecha(page + 1));
+			if (backRunnable != null)
+				inventory.setItem(backSlot, getBackFlecha());
+			pages.put(page, inventory);
+			page++;
+		}
+		pages.get(pages.size()).setItem(nextPage, new ItemStack(Material.AIR)); // vai na última página e remove a
+																				// flecha de ir pra frente
+	}
 
-    private ItemStack getPageFlecha(int page) {
-        ItemStack item = new ItemStack(Material.ARROW);
-        ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(ChatColor.GREEN + "Página " + page);
-        item.setItemMeta(meta);
-        return item;
-    }
+	private ItemStack getBackFlecha() {
+		ItemStack item = new ItemStack(Material.ARROW);
+		ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName(ChatColor.GREEN + "Voltar");
+		item.setItemMeta(meta);
+		return item;
+	}
 
-    public int getPages() {
-        return pages.size();
-    }
+	private ItemStack getPageFlecha(int page) {
+		ItemStack item = new ItemStack(Material.ARROW);
+		ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName(ChatColor.GREEN + "Página " + page);
+		item.setItemMeta(meta);
+		return item;
+	}
 
-    public boolean hasPage(int page) {
-        return pages.containsKey(page);
-    }
+	public int getPages() {
+		return pages.size();
+	}
 
-    public void open(Player player) {
-        open(player, 1);
-    }
+	public boolean hasPage(int page) {
+		return pages.containsKey(page);
+	}
 
-    public void open(Player player, int page) {
-        // player.closeInventory();
-        player.openInventory(pages.get(page));
-    }
+	public void open(Player player) {
+		open(player, 1);
+	}
 
-    private <T> List<List<T>> getPages(Collection<T> c, Integer pageSize) { // créditos a https://stackoverflow.com/users/2813377/pscuderi
-        List<T> list = new ArrayList<T>(c);
-        if (pageSize == null || pageSize <= 0 || pageSize > list.size()) pageSize = list.size();
-        int numPages = (int) Math.ceil((double) list.size() / (double) pageSize);
-        List<List<T>> pages = new ArrayList<List<T>>(numPages);
-        for (int pageNum = 0; pageNum < numPages;) pages.add(list.subList(pageNum * pageSize, Math.min(++pageNum * pageSize, list.size())));
-        return pages;
-    }
+	public void open(Player player, int page) {
+		// player.closeInventory();
+		player.openInventory(pages.get(page));
+	}
 
-    private class ScrollerHolder implements InventoryHolder {
-        private Scroller scroller;
-        private int page;
+	private <T> List<List<T>> getPages(Collection<T> c, Integer pageSize) { // créditos a
+																			// https://stackoverflow.com/users/2813377/pscuderi
+		List<T> list = new ArrayList<T>(c);
+		if (pageSize == null || pageSize <= 0 || pageSize > list.size())
+			pageSize = list.size();
+		int numPages = (int) Math.ceil((double) list.size() / (double) pageSize);
+		List<List<T>> pages = new ArrayList<List<T>>(numPages);
+		for (int pageNum = 0; pageNum < numPages;)
+			pages.add(list.subList(pageNum * pageSize, Math.min(++pageNum * pageSize, list.size())));
+		return pages;
+	}
 
-        public ScrollerHolder(Scroller scroller, int page) {
-            super();
-            this.scroller = scroller;
-            this.page = page;
-        }
+	private class ScrollerHolder implements InventoryHolder {
+		private Scroller scroller;
+		private int page;
 
-        @Override
-        public Inventory getInventory() {
-            return null;
-        }
+		public ScrollerHolder(Scroller scroller, int page) {
+			super();
+			this.scroller = scroller;
+			this.page = page;
+		}
 
-        /**
-         * @return the scroller
-         */
-        public Scroller getScroller() {
-            return scroller;
-        }
+		@Override
+		public Inventory getInventory() {
+			return null;
+		}
 
-        /**
-         * @return the page
-         */
-        public int getPage() {
-            return page;
-        }
-    }
+		/**
+		 * @return the scroller
+		 */
+		public Scroller getScroller() {
+			return scroller;
+		}
 
-    public interface PlayerRunnable {
+		/**
+		 * @return the page
+		 */
+		public int getPage() {
+			return page;
+		}
+	}
 
-        public void run(Player player);
+	public interface PlayerRunnable {
 
-    }
+		public void run(Player player);
 
-    public interface ChooseItemRunnable {
-        public void run(Player player, ItemStack item);
-    }
+	}
 
-    public static class ScrollerBuilder {
-        private List<ItemStack> items;
-        private String name;
-        private List<Integer> slots;
-        private int backSlot, previousPage, nextPage, inventorySize;
-        private PlayerRunnable backRunnable;
-        private ChooseItemRunnable clickRunnable;
+	public interface ChooseItemRunnable {
+		public void run(Player player, ItemStack item);
+	}
 
-        private final static List<Integer> ALLOWED_SLOTS = Arrays.asList(10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34
-                /* ,37,38,39,40,41,42,43 */); // slots para caso o inventário tiver 6 linhas
+	public static class ScrollerBuilder {
+		private List<ItemStack> items;
+		private String name;
+		private List<Integer> slots;
+		private int backSlot;
+		private int previousPage;
+		private int nextPage;
+		private int inventorySize;
+		private PlayerRunnable backRunnable;
+		private ChooseItemRunnable clickRunnable;
 
-        public ScrollerBuilder() {
-            // default values
-            this.items = new ArrayList<>();
-            this.name = "";
-            this.inventorySize = 45;
-            this.slots = ALLOWED_SLOTS;
-            this.backSlot = -1;
-            this.previousPage = 18;
-            this.nextPage = 26;
-        }
+		private final static List<Integer> ALLOWED_SLOTS = Arrays.asList(10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23,
+				24, 25, 28, 29, 30, 31, 32, 33, 34
+		/* ,37,38,39,40,41,42,43 */); // slots para caso o inventário tiver 6 linhas
 
-        public ScrollerBuilder withItems(List<ItemStack> items) {
-            this.items = items;
-            return this;
-        }
+		public ScrollerBuilder() {
+			// default values
+			this.items = new ArrayList<>();
+			this.name = "";
+			this.inventorySize = 45;
+			this.slots = ALLOWED_SLOTS;
+			this.backSlot = -1;
+			this.previousPage = 18;
+			this.nextPage = 26;
+		}
 
-        public ScrollerBuilder withOnClick(ChooseItemRunnable clickRunnable) {
-            this.clickRunnable = clickRunnable;
-            return this;
-        }
+		public ScrollerBuilder withItems(List<ItemStack> items) {
+			this.items = items;
+			return this;
+		}
 
-        public ScrollerBuilder withName(String name) {
-            this.name = name;
-            return this;
-        }
+		public ScrollerBuilder withOnClick(ChooseItemRunnable clickRunnable) {
+			this.clickRunnable = clickRunnable;
+			return this;
+		}
 
-        public ScrollerBuilder withSize(int size) {
-            this.inventorySize = size;
-            return this;
-        }
+		public ScrollerBuilder withName(String name) {
+			this.name = name;
+			return this;
+		}
 
-        public ScrollerBuilder withArrowsSlots(int previousPage, int nextPage) {
-            this.previousPage = previousPage;
-            this.nextPage = nextPage;
-            return this;
-        }
+		public ScrollerBuilder withSize(int size) {
+			this.inventorySize = size;
+			return this;
+		}
 
-        public ScrollerBuilder withBackItem(int slot, PlayerRunnable runnable) {
-            this.backSlot = slot;
-            this.backRunnable = runnable;
-            return this;
-        }
+		public ScrollerBuilder withArrowsSlots(int previousPage, int nextPage) {
+			this.previousPage = previousPage;
+			this.nextPage = nextPage;
+			return this;
+		}
 
-        public ScrollerBuilder withItemsSlots(Integer... slots) {
-            this.slots = Arrays.asList(slots);
-            return this;
-        }
+		public ScrollerBuilder withBackItem(int slot, PlayerRunnable runnable) {
+			this.backSlot = slot;
+			this.backRunnable = runnable;
+			return this;
+		}
 
-        public Scroller build() {
-            return new Scroller(this);
-        }
+		public ScrollerBuilder withItemsSlots(Integer... slots) {
+			this.slots = Arrays.asList(slots);
+			return this;
+		}
 
-    }
+		public Scroller build() {
+			return new Scroller(this);
+		}
+
+	}
 
 }

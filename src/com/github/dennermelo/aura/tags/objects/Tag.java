@@ -1,10 +1,13 @@
 package com.github.dennermelo.aura.tags.objects;
 
-
 public class Tag {
 
-	private String nome, permissao, formato, item_nome, tipo;
+	private String nome;
+	private String item_nome;
+	private String permissao;
+	private String formato;
 	private int valor;
+	private String tipo;
 
 	public Tag(String nome, String item_nome, String permissao, String formato, int valor, String tipo) {
 		this.nome = nome;
