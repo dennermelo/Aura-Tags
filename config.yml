@@ -1,0 +1,76 @@
+Mensagens:
+  Player:
+    # Variável %tag% : Visualiza o nome ou formato da tag (dependendo da situação);
+    selecionou: '&aVocê selecionou a tag &7%tag%&a.'
+    comprou: '&aVocê adquiriu a tag &7%tag% &acom sucesso!'
+    sem-saldo: '&cVocê não possui saldo suficiente para completar esta compra.'
+
+Title:
+  # Opção "ativar" é utilizada para permitir ou não o uso do Title (Requer TitleAPI);
+  # Variável %tag% : Visualiza o formato da tag;
+  ativar: true
+  Mensagens:
+    Selecionou:
+      titulo: '&a&lSUCESSO!'
+      subtitulo: '&7Você selecionou a tag %tag% &7com sucesso!'
+    Comprou:
+      titulo: '&a&lSUCESSO!'
+      subtitulo: '&7Você adquiriu a tag %tag% &7com sucesso!'
+
+Item:
+  # Formato do nome e descrição do item do menu de tags;
+  # Variável %tag_nome% : Visualiza o nome da tag;
+  # Variável %tag_formato% : Visualiza o formato da tag;
+  # Variável %tag_valor% : Visualiza o valor da tag + tipo;
+  Basico:
+    nome: '&7%tag_nome%'
+    lore:
+      - ''
+      - '&fTag: %tag_formato%'
+      - '&fCusto: &7%tag_valor%'
+      - ''
+  Comprar:
+    # Informação extra adicionada ao item quando não possui a tag;
+    lore:
+      - '&aClique para adquirir esta tag.'
+  Selecionar:
+    # Informação extra adicionada ao item quando possui e pode selecionar;
+    lore:
+      - '&aClique para selecionar esta tag.'
+  Selecionado:
+    # Informação extra adicionada ao item quando a tag está selecionada;
+    lore:
+      - '&7Esta tag está selecionada por você.'
+
+Actionbar:
+  # Opção "ativar" é utilizada para permitir ou não o uso de Actionbar (Requer ActionbarAPI)
+  # Variável %player% : Visualiza o nome do jogador;
+  # Variável %tag% : Visualiza o formato da tag;
+  # Variável %valor% : Visualiza o valor de compra + tipo de moeda;
+  ativar: true
+  Mensagens:
+    comprou: '&7O jogador &b%player% &7adquiriu a tag %tag% &7por &b%valor%&7.'
+
+Tags:
+  
+  # Exemplo:
+  # 
+  # Desenvolvedor:
+  #  nome: 'Desenvolvedor' # Nome da tag;
+  #  permissao: 'auratags.dev' # Permissão a ser adicionada ao jogador;
+  #  formato: '&e[Desenvolvedor]' # Formato da tag;
+  #  valor: 1000 - Valor SOMENTE em numero completo, quebrados não funcionam;
+  #  tipo: coins - Pode variar, entre "cash" e "coins";
+
+    Cash:
+      nome: 'Cash'
+      permissao: 'auratags.cash'
+      formato: '&6[Cash]'
+      valor: 1000
+      tipo: cash
+    Matador:
+      nome: 'Matador'
+      permissao: 'auratags.matador'
+      formato: '&9[Matador]'
+      valor: 900
+      tipo: coins

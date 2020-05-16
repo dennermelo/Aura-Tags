@@ -1,0 +1,6 @@
+name: AuraTags
+author: [String]
+main: com.github.dennermelo.aura.tags.Main
+version: 0.1.1
+commands:
+    tags:
