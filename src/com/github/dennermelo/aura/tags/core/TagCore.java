@@ -23,13 +23,13 @@ public class TagCore {
 	private static PlayerPoints playerPoints;
 	private static List<Tag> tags = new ArrayList<Tag>();
 	private static TagManager tagManager;
-	private static Main plugin;
+	private final Main plugin;
 
 	public static boolean USE_TITLE;
 	public static boolean USE_ACTION;
 
 	public TagCore(Main plugin) {
-		TagCore.plugin = plugin;
+		this.plugin = plugin;
 		loadConfig();
 		loadTags();
 		loadCommands();
@@ -111,7 +111,7 @@ public class TagCore {
 	}
 
 	public static FileConfiguration getConfig() {
-		return plugin.getConfig();
+		return Main.getPlugin().getConfig();
 	}
 
 }
