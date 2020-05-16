@@ -54,16 +54,8 @@ public class TagsInventory {
 
 		}
 
-		PlayerRunnable pr = new PlayerRunnable() {
-
-			@Override
-			public void run(Player player) {
-
-			}
-		};
-
 		Scroller scroller = new Scroller.ScrollerBuilder().withName("§7Tags do Servidor").withItems(itens)
-				.withBackItem(36, pr).withArrowsSlots(18, 26).build();
+				.withArrowsSlots(18, 26).build();
 
 		scroller.open(player);
 
