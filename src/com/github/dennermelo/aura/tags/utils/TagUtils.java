@@ -36,6 +36,7 @@ public class TagUtils {
 			}
 			player.sendMessage(TagCore.getConfig().getString("Mensagens.Player.comprou").replace("&", "§")
 					.replace("%tag%", tag.getFormato()));
+			player.closeInventory();
 			return;
 		} else if (tag.getTipo().equalsIgnoreCase("coins")) {
 			user.addPermission(tag.getPermissao());
