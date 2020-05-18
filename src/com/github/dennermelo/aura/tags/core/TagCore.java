@@ -1,8 +1,5 @@
 package com.github.dennermelo.aura.tags.core;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.black_ixx.playerpoints.PlayerPoints;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -13,7 +10,6 @@ import com.github.dennermelo.aura.tags.Main;
 import com.github.dennermelo.aura.tags.command.TagsCommand;
 import com.github.dennermelo.aura.tags.listener.TagsListener;
 import com.github.dennermelo.aura.tags.manager.TagManager;
-import com.github.dennermelo.aura.tags.objects.Tag;
 
 import net.milkbowl.vault.economy.Economy;
 
@@ -21,8 +17,7 @@ public class TagCore {
 
 	private static Economy econ = null;
 	private static PlayerPoints playerPoints;
-	private static List<Tag> tags = new ArrayList<Tag>();
-	private static TagManager tagManager;
+	private static TagManager tagManager = new TagManager();
 	private final Main plugin;
 
 	public static boolean USE_TITLE;
@@ -30,45 +25,20 @@ public class TagCore {
 
 	public TagCore(Main plugin) {
 		this.plugin = plugin;
+
+		hookPlayerPoints();
+		setupEconomy();
+
 		loadConfig();
-		loadTags();
+		tagManager.loadTags();
 		loadCommands();
 		loadParameters();
 		loadEvents();
-		hookPlayerPoints();
 	}
 
-	public static Economy getEco() {
-		return econ;
-	}
-
-	private boolean setupEconomy() {
-		if (Bukkit.getPluginManager().getPlugin("Vault") == null) {
-			return false;
-		}
-		RegisteredServiceProvider<Economy> rsp = Bukkit.getServicesManager().getRegistration(Economy.class);
-		if (rsp == null) {
-			return false;
-		}
-		econ = rsp.getProvider();
-		return econ != null;
-	}
-
-	private void loadTags() {
-		for (String key : plugin.getConfig().getConfigurationSection("Tags").getKeys(false)) {
-			String nome = plugin.getConfig().getString("Tags." + key + ".nome");
-			String permissao = plugin.getConfig().getString("Tags." + key + ".permissao");
-			String formato = plugin.getConfig().getString("Tags." + key + ".formato").replace("&", "§");
-			int valor = plugin.getConfig().getInt("Tags." + key + ".valor");
-			String tipo = plugin.getConfig().getString("Tags." + key + ".tipo");
-
-			tags.add(new Tag(nome,
-					getConfig().getString("Item.Basico.nome").replace("&", "§").replace("%tag_nome%", nome), permissao,
-					formato, valor, tipo));
-			Bukkit.getConsoleSender()
-					.sendMessage("§b[Aura-Tags] §7O prefixo " + formato + " §7foi carregado corretamente.");
-		}
-	}
+	/*
+	 * Load Section;
+	 */
 
 	private void loadParameters() {
 		hookPlayerPoints();
@@ -98,6 +68,10 @@ public class TagCore {
 		return playerPoints != null;
 	}
 
+	/*
+	 * Get Section;
+	 */
+
 	public static PlayerPoints getPlayerPoints() {
 		return playerPoints;
 	}
@@ -106,12 +80,28 @@ public class TagCore {
 		return tagManager;
 	}
 
-	public static List<Tag> getTags() {
-		return tags;
-	}
-
 	public static FileConfiguration getConfig() {
 		return Main.getPlugin().getConfig();
+	}
+
+	public static Economy getEco() {
+		return econ;
+	}
+
+	/*
+	 * Extra Section;
+	 */
+
+	private boolean setupEconomy() {
+		if (Bukkit.getPluginManager().getPlugin("Vault") == null) {
+			return false;
+		}
+		RegisteredServiceProvider<Economy> rsp = Bukkit.getServicesManager().getRegistration(Economy.class);
+		if (rsp == null) {
+			return false;
+		}
+		econ = rsp.getProvider();
+		return econ != null;
 	}
 
 }

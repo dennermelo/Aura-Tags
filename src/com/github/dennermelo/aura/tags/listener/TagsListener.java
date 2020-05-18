@@ -8,7 +8,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 
 import com.github.dennermelo.aura.tags.core.TagCore;
 import com.github.dennermelo.aura.tags.objects.Tag;
-import com.github.dennermelo.aura.tags.utils.TagUtils;
 
 import br.com.devpaulo.legendchat.api.events.ChatMessageEvent;
 import ru.tehkode.permissions.PermissionUser;
@@ -34,7 +33,7 @@ public class TagsListener implements Listener {
 				e.setCancelled(true);
 				return;
 			}
-			for (Tag tag : TagCore.getTags()) {
+			for (Tag tag : TagCore.getTagManger().getTags()) {
 
 				if (e.getCurrentItem().getItemMeta().getDisplayName().equals(tag.getItemNome())) {
 
@@ -42,13 +41,13 @@ public class TagsListener implements Listener {
 						e.setCancelled(true);
 						return;
 					} else if (user.has(tag.getPermissao())) {
-						TagUtils.setTag(player, tag);
+						TagCore.getTagManger().setTag(player, tag);
 						return;
 					}
 
 					if (tag.getTipo().equalsIgnoreCase("cash")) {
 						if (TagCore.getPlayerPoints().getAPI().look(player.getName()) >= tag.getValor()) {
-							TagUtils.giveTag(player, tag);
+							TagCore.getTagManger().giveTag(player, tag);
 							return;
 						} else {
 							player.sendMessage(
@@ -58,7 +57,7 @@ public class TagsListener implements Listener {
 						}
 					} else if (tag.getTipo().equalsIgnoreCase("coins")) {
 						if (TagCore.getEco().has(player.getName(), tag.getValor())) {
-							TagUtils.giveTag(player, tag);
+							TagCore.getTagManger().giveTag(player, tag);
 							return;
 						} else {
 							player.sendMessage(

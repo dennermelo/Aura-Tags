@@ -21,7 +21,7 @@ public class TagsInventory {
 
 		List<ItemStack> itens = new ArrayList<ItemStack>();
 		PermissionUser user = PermissionsEx.getUser(player);
-		for (Tag tag : TagCore.getTags()) {
+		for (Tag tag : TagCore.getTagManger().getTags()) {
 			ItemStack item = new ItemStack(Material.NAME_TAG);
 			ItemMeta item_meta = item.getItemMeta();
 			item_meta.setDisplayName(TagCore.getConfig().getString("Item.Basico.nome").replace("&", "§")
