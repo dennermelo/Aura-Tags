@@ -12,7 +12,7 @@ import com.github.dennermelo.aura.tags.commands.TagsCommand;
 import com.github.dennermelo.aura.tags.listeners.InventoryInteract;
 import com.github.dennermelo.aura.tags.listeners.Join;
 import com.github.dennermelo.aura.tags.listeners.PlayerChat;
-import com.github.dennermelo.aura.tags.manager.TagManager;
+import com.github.dennermelo.aura.tags.managers.TagManager;
 import com.github.dennermelo.aura.tags.settings.Preferences;
 import com.github.dennermelo.aura.tags.types.Messages;
 

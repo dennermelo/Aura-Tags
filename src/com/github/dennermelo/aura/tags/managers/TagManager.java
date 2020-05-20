@@ -1,4 +1,4 @@
-package com.github.dennermelo.aura.tags.manager;
+package com.github.dennermelo.aura.tags.managers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
