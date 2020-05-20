@@ -1,6 +1,11 @@
 name: AuraTags
 author: [String]
+description: Plugin de tags parecido ao do Sky.
+website: github.com/dennermelo/Aura-Tags
 main: com.github.dennermelo.aura.tags.Main
+depends: [Vault, Legendchat, PlayerPoints, PermissionsEx]
 version: 1.2.0
 commands:
     tags:
+      description: Comando principal do plugin.
+      aliases: [tagmenu, tagsmenu]
