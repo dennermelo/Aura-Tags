@@ -15,6 +15,7 @@ import com.github.dennermelo.aura.tags.listeners.PlayerChat;
 import com.github.dennermelo.aura.tags.managers.TagManager;
 import com.github.dennermelo.aura.tags.settings.Preferences;
 import com.github.dennermelo.aura.tags.types.Messages;
+import com.github.dennermelo.aura.tags.utils.Metrics;
 
 import net.milkbowl.vault.economy.Economy;
 
@@ -40,6 +41,7 @@ public class Main extends JavaPlugin {
 		hookPlayerPoints();
 		registerEvents();
 		registerCommands();
+		startupMetrics();
 	}
 
 	@Override
@@ -84,6 +86,10 @@ public class Main extends JavaPlugin {
 
 	public static PlayerPoints getPoints() {
 		return playerPoints;
+	}
+	
+	private void startupMetrics() {
+		 new Metrics(this, 7587);
 	}
 
 	private boolean setupEconomy() {
