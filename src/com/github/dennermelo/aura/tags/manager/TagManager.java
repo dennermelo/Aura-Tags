@@ -1,124 +1,93 @@
 package com.github.dennermelo.aura.tags.manager;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 
 import com.connorlinfoot.actionbarapi.ActionBarAPI;
 import com.connorlinfoot.titleapi.TitleAPI;
 import com.github.dennermelo.aura.tags.Main;
-import com.github.dennermelo.aura.tags.core.TagCore;
 import com.github.dennermelo.aura.tags.objects.Tag;
 
-import ru.tehkode.permissions.PermissionUser;
 import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 public class TagManager {
 
 	private HashMap<String, Tag> tags;
-	private List<Tag> tags_list;
-	private Plugin plugin = Main.getPlugin();
+	private List<Tag> tag_list;
 
 	public TagManager() {
 		this.tags = new HashMap<String, Tag>();
+		this.tag_list = new ArrayList<Tag>();
+		FileConfiguration cf = Main.getInstance().getConfig();
+		for (String tag : Main.getInstance().getConfig().getConfigurationSection("Tags").getKeys(false)) {
+			String nome = cf.getString("Tags." + tag + ".nome");
+			String item_nome = Main.getPreferencesManager().BASIC_ITEM_NAME.replace("%tag_nome%", nome)
+					.replace("%tag_formato", cf.getString("Tags." + tag + ".formato").replace("&", "§"));
+			String permissao = cf.getString("Tags." + tag + ".permissao");
+			String formato = cf.getString("Tags." + tag + ".formato").replace("&", "§");
+			int valor = cf.getInt("Tags." + tag + ".valor");
+			String tipo = cf.getString("Tags." + tag + ".tipo");
+
+			tag_list.add(new Tag(nome, item_nome, permissao, formato, valor, tipo));
+		}
 	}
 
 	public void setTag(Player player, Tag tag) {
+
 		tags.put(player.getName(), tag);
-		player.sendMessage(TagCore.getConfig().getString("Mensagens.Player.selecionou").replace("&", "§")
-				.replace("%tag%", tag.getFormato()));
-		if (TagCore.USE_TITLE) {
+		player.sendMessage(Main.getMessagesManager().MESSAGE_PLAYER_SELECTED.replace("%tag%", tag.getFormato()));
+		if (Main.getPreferencesManager().USE_TITLE) {
 			TitleAPI.sendTitle(player, 40, 50, 40,
-					TagCore.getConfig().getString("Title.Mensagens.Selecionou.titulo").replace("&", "§"),
-					TagCore.getConfig().getString("Title.Mensagens.Selecionou.subtitulo").replace("&", "§")
-							.replace("%tag%", tag.getFormato()));
+					Main.getMessagesManager().TITLE_SELECTED.replace("%tag%", tag.getFormato()),
+					Main.getMessagesManager().SUBTITLE_SELECTED.replace("%tag%", tag.getFormato()));
 		}
-		player.closeInventory();
 	}
 
 	@SuppressWarnings("deprecation")
 	public void giveTag(Player player, Tag tag) {
-		PermissionUser user = PermissionsEx.getUser(player);
+
+		tags.put(player.getName(), tag);
+		PermissionsEx.getUser(player).addPermission(tag.getPermissao());
+
+		player.sendMessage(Main.getMessagesManager().MESSAGE_PLAYER_PURCHASED.replace("%tag%", tag.getFormato()));
+		if (Main.getPreferencesManager().USE_TITLE) {
+			TitleAPI.sendTitle(player, 40, 50, 40, Main.getMessagesManager().TITLE_PURCHASED,
+					Main.getMessagesManager().SUBTITLE_PURCHASED.replace("%tag%", tag.getFormato()).replace("%valor%",
+							tag.getValor() + " " + tag.getTipo()));
+		}
+		if (Main.getPreferencesManager().USE_ACTIONBAR) {
+			for (Player players : Bukkit.getOnlinePlayers()) {
+				ActionBarAPI.sendActionBar(players,
+						Main.getMessagesManager().ACTIONBAR_PURCHASED.replace("%player%", player.getName())
+								.replace("%tag%", tag.getFormato())
+								.replace("%valor%", tag.getValor() + " " + tag.getTipo()));
+			}
+		}
 		if (tag.getTipo().equalsIgnoreCase("cash")) {
-			user.addPermission(tag.getPermissao());
-			tags.put(player.getName(), tag);
-			TagCore.getPlayerPoints().getAPI().take(player.getName(), tag.getValor());
-			if (TagCore.USE_ACTION) {
-				for (Player players : Bukkit.getOnlinePlayers()) {
-					ActionBarAPI.sendActionBar(players,
-							TagCore.getConfig().getString("Actionbar.Mensagens.comprou").replace("&", "§")
-									.replace("%tag%", tag.getFormato()).replace("%valor%", tag.getValor() + " Cash")
-									.replace("%player%", player.getName()));
-				}
-			}
-			if (TagCore.USE_TITLE) {
-				TitleAPI.sendTitle(player, 40, 50, 40,
-						TagCore.getConfig().getString("Title.Mensagens.Comprou.titulo").replace("&", "§"),
-						TagCore.getConfig().getString("Title.Mensagens.Comprou.subtitulo").replace("&", "§")
-								.replace("%tag%", tag.getFormato()));
-			}
-			player.sendMessage(TagCore.getConfig().getString("Mensagens.Player.comprou").replace("&", "§")
-					.replace("%tag%", tag.getFormato()));
-			player.closeInventory();
-			return;
+			Main.getPoints().getAPI().take(player.getName(), tag.getValor());
 		} else if (tag.getTipo().equalsIgnoreCase("coins")) {
-			user.addPermission(tag.getPermissao());
-			tags.put(player.getName(), tag);
-			TagCore.getEco().withdrawPlayer(player.getName(), tag.getValor());
-			if (TagCore.USE_ACTION) {
-				for (Player players : Bukkit.getOnlinePlayers()) {
-					ActionBarAPI.sendActionBar(players,
-							TagCore.getConfig().getString("Actionbar.Mensagens.comprou").replace("&", "§")
-									.replace("%tag%", tag.getFormato()).replace("%valor%", tag.getValor() + " Coins")
-									.replace("%player%", player.getName()));
-				}
-			}
-			if (TagCore.USE_TITLE) {
-				TitleAPI.sendTitle(player, 40, 50, 40,
-						TagCore.getConfig().getString("Title.Mensagens.Comprou.titulo").replace("&", "§"),
-						TagCore.getConfig().getString("Title.Mensagens.Comprou.subtitulo").replace("&", "§")
-								.replace("%tag%", tag.getFormato()));
-			}
-			player.sendMessage(TagCore.getConfig().getString("Mensagens.Player.comprou").replace("&", "§")
-					.replace("%tag%", tag.getFormato()));
-			player.closeInventory();
-			return;
+			Main.getEco().bankWithdraw(player.getName(), tag.getValor());
 		}
 	}
 
-	public void removeTag(String player) {
-		tags.remove(player);
+	public Tag getTag(Player player) {
+		return tags.get(player.getName());
 	}
 
-	public Tag getTag(String player) {
-		return tags.get(player);
+	public boolean hasTag(Player player) {
+		return tags.containsKey(player.getName());
 	}
 
-	public boolean hasTag(String player) {
-		return tags.containsKey(player);
+	public void defineTag(Player player, Tag tag) {
+		tags.put(player.getName(), tag);
 	}
 
-	public List<Tag> getTags() {
-		return tags_list;
+	public List<Tag> getTagList() {
+		return tag_list;
 	}
-
-	public void loadTags() {
-		for (String key : plugin.getConfig().getConfigurationSection("Tags").getKeys(false)) {
-			String nome = plugin.getConfig().getString("Tags." + key + ".nome");
-			String permissao = plugin.getConfig().getString("Tags." + key + ".permissao");
-			String formato = plugin.getConfig().getString("Tags." + key + ".formato").replace("&", "§");
-			int valor = plugin.getConfig().getInt("Tags." + key + ".valor");
-			String tipo = plugin.getConfig().getString("Tags." + key + ".tipo");
-
-			tags_list.add(new Tag(nome,
-					plugin.getConfig().getString("Item.Basico.nome").replace("&", "§").replace("%tag_nome%", nome),
-					permissao, formato, valor, tipo));
-			Bukkit.getConsoleSender()
-					.sendMessage("§b[Aura-Tags] §7O prefixo " + formato + " §7foi carregado corretamente.");
-		}
-	}
-
 }

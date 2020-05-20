@@ -6,14 +6,16 @@ public class Tag {
 	private String item_nome;
 	private String permissao;
 	private String formato;
+
 	private int valor;
 	private String tipo;
 
 	public Tag(String nome, String item_nome, String permissao, String formato, int valor, String tipo) {
 		this.nome = nome;
+		this.item_nome = item_nome;
 		this.permissao = permissao;
 		this.formato = formato;
-		this.item_nome = item_nome;
+
 		this.valor = valor;
 		this.tipo = tipo;
 	}
@@ -24,6 +26,22 @@ public class Tag {
 
 	public void setNome(String nome) {
 		this.nome = nome;
+	}
+
+	public String getItemNome() {
+		return item_nome;
+	}
+
+	public void setItemNome(String item_nome) {
+		this.item_nome = item_nome;
+	}
+
+	public String getPermissao() {
+		return permissao;
+	}
+
+	public void setPermissao(String permissao) {
+		this.permissao = permissao;
 	}
 
 	public String getFormato() {
@@ -40,22 +58,6 @@ public class Tag {
 
 	public void setValor(int valor) {
 		this.valor = valor;
-	}
-
-	public String getPermissao() {
-		return permissao;
-	}
-
-	public void setPermissao(String permissao) {
-		this.permissao = permissao;
-	}
-
-	public String getItemNome() {
-		return item_nome;
-	}
-
-	public void setItemNome(String item_nome) {
-		this.item_nome = item_nome;
 	}
 
 	public String getTipo() {

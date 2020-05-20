@@ -3,7 +3,7 @@ Mensagens:
     # Variável %tag% : Visualiza o nome ou formato da tag (dependendo da situação);
     selecionou: '&aVocê selecionou a tag &7%tag%&a.'
     comprou: '&aVocê adquiriu a tag &7%tag% &acom sucesso!'
-    sem-saldo: '&cVocê não possui saldo suficiente para completar esta compra.'
+    saldo-insuficiente: '&cVocê não possui saldo suficiente para completar esta compra.'
 
 Title:
   # Opção "ativar" é utilizada para permitir ou não o uso do Title (Requer TitleAPI);
@@ -16,6 +16,15 @@ Title:
     Comprou:
       titulo: '&a&lSUCESSO!'
       subtitulo: '&7Você adquiriu a tag %tag% &7com sucesso!'
+
+Actionbar:
+  # Opção "ativar" é utilizada para permitir ou não o uso de Actionbar (Requer ActionbarAPI)
+  # Variável %player% : Visualiza o nome do jogador;
+  # Variável %tag% : Visualiza o formato da tag;
+  # Variável %valor% : Visualiza o valor de compra + tipo de moeda;
+  ativar: true
+  Mensagens:
+    comprou: '&7O jogador &b%player% &7adquiriu a tag %tag% &7por &b%valor%&7.'
 
 Item:
   # Formato do nome e descrição do item do menu de tags;
@@ -42,15 +51,6 @@ Item:
     lore:
       - '&7Esta tag está selecionada por você.'
 
-Actionbar:
-  # Opção "ativar" é utilizada para permitir ou não o uso de Actionbar (Requer ActionbarAPI)
-  # Variável %player% : Visualiza o nome do jogador;
-  # Variável %tag% : Visualiza o formato da tag;
-  # Variável %valor% : Visualiza o valor de compra + tipo de moeda;
-  ativar: true
-  Mensagens:
-    comprou: '&7O jogador &b%player% &7adquiriu a tag %tag% &7por &b%valor%&7.'
-
 Tags:
   
   # Exemplo:
@@ -73,4 +73,10 @@ Tags:
       permissao: 'auratags.matador'
       formato: '&9[Matador]'
       valor: 900
+      tipo: coins
+    Coins:
+      nome: 'Magnata'
+      permissao: 'auratags.magnata'
+      formato: '&a[Magnata]'
+      valor: 1200
       tipo: coins

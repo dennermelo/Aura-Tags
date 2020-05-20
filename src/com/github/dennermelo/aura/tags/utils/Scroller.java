@@ -48,7 +48,7 @@ public class Scroller {
 					}
 				}
 			}
-		}, Main.getPlugin());
+		}, Main.getPlugin(Main.class));
 	}
 
 	private List<ItemStack> items;
